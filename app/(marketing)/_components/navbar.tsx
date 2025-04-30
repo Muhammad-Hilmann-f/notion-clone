@@ -8,6 +8,8 @@ import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
+import { useUser } from "@clerk/clerk-react";
+
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -15,9 +17,12 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { SignInButton } from "@clerk/clerk-react";
+import { SignInButton, UserButton } from "@clerk/clerk-react";
+import Spinner from "@/components/ui/spinner";
+import Link from "next/link";
 
 const Navbar = () => {
+  const { user, isSignedIn } = useUser();
   const { isAuthenticated, isLoading } = useConvexAuth();
   const scrolled = useScrollTop();
   const { theme, setTheme } = useTheme();
@@ -41,16 +46,33 @@ const Navbar = () => {
         <Logo />
         <div className="flex items-center gap-x-2">
           <div className="hidden md:flex items-center gap-x-2">
-            {isAuthenticated && !isLoading ? (
-              <Button variant="ghost" size="icon" className="cursor-pointer">
-                Profile
-              </Button>
+            {isLoading ? (
+              <Spinner />
+            ) : isAuthenticated ? (
+              <>
+                <div className="flex items-center gap-4">
+                  <span className="text-sm font-medium">
+                    {user?.username || user?.fullName}
+                  </span>
+                  <UserButton afterSignOutUrl="/" />
+                  <Button variant="outline">
+                    <Link href="/documents">Enter BlocNote</Link>
+                  </Button>
+                </div>
+              </>
             ) : (
-              <SignInButton mode="modal">
-                <Button variant="ghost" size="sm" className="cursor-pointer">
-                  Sign In
-                </Button>
-              </SignInButton>
+              <>
+                <SignInButton mode="modal">
+                  <Button variant="ghost" size="sm" className="cursor-pointer">
+                    Sign In
+                  </Button>
+                </SignInButton>
+                <SignInButton mode="modal">
+                  <Button variant="ghost" size="sm" className="cursor-pointer">
+                    Get BlocNote free
+                  </Button>
+                </SignInButton>
+              </>
             )}
           </div>
 

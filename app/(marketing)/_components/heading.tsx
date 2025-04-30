@@ -1,8 +1,13 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import Spinner from "@/components/ui/spinner";
+import { SignInButton } from "@clerk/clerk-react";
+import { useConvexAuth } from "convex/react";
+import Link from "next/link";
 
 export const Heading = () => {
+  const { isAuthenticated, isLoading } = useConvexAuth();
   return (
     <div className="flex items-center justify-center px-4 py-20">
       <div className="max-w-3xl w-full space-y-6 text-center">
@@ -13,7 +18,17 @@ export const Heading = () => {
           BlocNote is a collaborative workspace that brings your team together.
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          <Button className="cursor-pointer">Enter BlocNote</Button>
+          {isLoading ? (
+            <Spinner />
+          ) : isAuthenticated ? (
+            <Button asChild>
+              <Link href="/documents">Enter BlocNote</Link>
+            </Button>
+          ) : (
+            <SignInButton mode="modal">
+              <Button variant="default">Get Started</Button>
+            </SignInButton>
+          )}
         </div>
       </div>
     </div>

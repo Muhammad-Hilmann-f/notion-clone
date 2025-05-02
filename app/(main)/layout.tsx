@@ -41,9 +41,7 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="h-full flex bg-white dark:bg-[#1f1f1f] text-gray-900 dark:text-white">
       <Navigation />
-      <main className="flex-1 h-full overflow-y-auto pl-0 md:pl-64">
-        {children}
-      </main>
+      <main className="flex-1 h-full overflow-y-auto">{children}</main>
     </div>
   );
 };
